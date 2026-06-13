@@ -1,0 +1,2633 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   FoodBridge AI &ndash; Intelligent Food Redistribution
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root {
+    --bg:        #F0F4F8;
+    --surface:   #FFFFFF;
+    --surface2:  #F7F9FC;
+    --surface3:  #EEF2F7;
+    --border:    #E2E8F2;
+    --border2:   #C8D4E8;
+
+    --green:     #16A34A;
+    --green-mid: #22C55E;
+    --green-bg:  #DCFCE7;
+    --green-soft:#F0FDF4;
+
+    --orange:    #EA580C;
+    --orange-bg: #FFF0E8;
+    --orange-mid:#F97316;
+
+    --amber:     #D97706;
+    --amber-bg:  #FFFBEB;
+
+    --blue:      #2563EB;
+    --blue-bg:   #EFF6FF;
+    --blue-mid:  #3B82F6;
+
+    --red:       #DC2626;
+    --red-bg:    #FEF2F2;
+
+    --text:      #0F1929;
+    --text2:     #4A5568;
+    --text3:     #94A3B8;
+    --text4:     #CBD5E1;
+
+    --radius:    14px;
+    --radius-sm: 9px;
+    --shadow:    0 1px 3px rgba(15,25,41,0.07), 0 1px 2px rgba(15,25,41,0.05);
+    --shadow-md: 0 4px 16px rgba(15,25,41,0.09), 0 1px 4px rgba(15,25,41,0.05);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    left:0; top:0; bottom:0;
+    width: 232px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+
+  .logo {
+    padding: 22px 18px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-leaf {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #16A34A, #22C55E);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(22,163,74,0.3);
+  }
+
+  .logo-wordmark {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.4px;
+  }
+
+  .logo-wordmark span { color: var(--green); }
+
+  .logo-tagline {
+    font-size: 10px;
+    color: var(--text3);
+    margin-top: 5px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Region pill */
+  .region-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-soft);
+    border: 1px solid #BBF7D0;
+    border-radius: 20px;
+    padding: 4px 10px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 600;
+    width: fit-content;
+  }
+
+  .region-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green-mid);
+    animation: blink 2s infinite;
+  }
+
+  @keyframes blink {
+    0%,100% { opacity:1; }
+    50% { opacity:0.3; }
+  }
+
+  .nav { flex:1; padding: 14px 10px; overflow-y:auto; }
+
+  .nav-section { margin-bottom: 6px; }
+
+  .nav-heading {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--text3);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 10px 10px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text2);
+    transition: all 0.13s;
+    margin-bottom: 1px;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+
+  .nav-item.active {
+    background: var(--green-bg);
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .nav-icon { font-size: 14px; width: 16px; text-align: center; flex-shrink:0; }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--orange);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 20px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .nav-badge.green { background: var(--green-bg); color: var(--green); }
+
+  .sidebar-bottom {
+    padding: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .user-tile {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .user-tile:hover { background: var(--surface3); }
+
+  .avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--blue-mid));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .user-name { font-size: 12.5px; font-weight: 700; color: var(--text); }
+  .user-role { font-size: 10.5px; color: var(--text3); }
+
+  /* ── MAIN ── */
+  .main { margin-left: 232px; min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    height: 60px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: var(--shadow);
+  }
+
+  .page-title { font-size: 17px; font-weight: 800; color: var(--text); flex:1; letter-spacing:-0.3px; }
+  .page-date { font-size: 12px; color: var(--text3); font-weight: 500; }
+
+  .topbar-right { display:flex; align-items:center; gap:10px; }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--text3);
+    width: 210px;
+    cursor: text;
+    transition: border-color 0.15s;
+  }
+  .search-box:hover { border-color: var(--border2); }
+
+  .icon-btn {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.13s;
+  }
+  .icon-btn:hover { background: var(--surface2); }
+
+  .notif-pip {
+    position: absolute;
+    top: 7px; right: 7px;
+    width: 7px; height: 7px;
+    background: var(--orange);
+    border-radius: 50%;
+    border: 2px solid var(--surface);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: all 0.13s;
+  }
+
+  .btn-green { background: var(--green); color: #fff; box-shadow: 0 2px 8px rgba(22,163,74,0.25); }
+  .btn-green:hover { background: #15803d; }
+
+  .btn-outline {
+    background: var(--surface);
+    color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+  .btn-outline:hover { background: var(--surface2); }
+
+  /* ── CONTENT ── */
+  .content { padding: 24px 28px; flex:1; }
+
+  /* ── ALERT ── */
+  .alert {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #FFF5F5;
+    border: 1.5px solid #FECACA;
+    border-left: 4px solid var(--red);
+    border-radius: var(--radius);
+    padding: 13px 18px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 8px rgba(220,38,38,0.08);
+  }
+
+  .alert-pulse {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+    animation: pulse-red 1.5s infinite;
+  }
+
+  @keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(220,38,38,0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(220,38,38,0); }
+    100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+  }
+
+  .alert-msg { flex:1; font-size: 13.5px; color: var(--text); }
+  .alert-msg strong { color: var(--red); }
+
+  .alert-time { font-size: 11px; color: var(--text3); white-space: nowrap; }
+
+  .btn-sm {
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 7px;
+    cursor: pointer;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .btn-sm-red { background: var(--red); color: #fff; }
+  .btn-sm-ghost { background: transparent; color: var(--text3); border: 1px solid var(--border2); }
+
+  /* ── STAT CARDS ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .stat:nth-child(1){animation-delay:.05s}
+  .stat:nth-child(2){animation-delay:.10s}
+  .stat:nth-child(3){animation-delay:.15s}
+  .stat:nth-child(4){animation-delay:.20s}
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(10px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* colored left stripe */
+  .stat::after {
+    content:'';
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width: 3px;
+    border-radius: 14px 0 0 14px;
+  }
+
+  .stat.s-green::after { background: var(--green); }
+  .stat.s-orange::after { background: var(--orange); }
+  .stat.s-amber::after { background: var(--amber); }
+  .stat.s-blue::after { background: var(--blue); }
+
+  .stat-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+
+  .stat-label { font-size: 11px; font-weight: 700; color: var(--text3); text-transform:uppercase; letter-spacing:0.7px; }
+
+  .stat-icon-box {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .stat-icon-box.green { background: var(--green-bg); }
+  .stat-icon-box.orange { background: var(--orange-bg); }
+  .stat-icon-box.amber { background: var(--amber-bg); }
+  .stat-icon-box.blue { background: var(--blue-bg); }
+
+  .stat-val {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 5px;
+    line-height: 1;
+  }
+
+  .stat.s-green .stat-val { color: var(--green); }
+  .stat.s-orange .stat-val { color: var(--orange); }
+  .stat.s-amber .stat-val { color: var(--amber); }
+  .stat.s-blue .stat-val { color: var(--blue); }
+
+  .stat-sub { font-size: 12px; color: var(--text3); font-weight: 500; }
+  .stat-sub .up { color: var(--green); font-weight: 700; }
+  .stat-sub .dn { color: var(--orange); font-weight: 700; }
+
+  /* ── TWO-COL GRID ── */
+  .mid-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .card-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title { font-size: 14.5px; font-weight: 800; color: var(--text); flex:1; letter-spacing:-0.2px; }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+
+  .pill-green { background: var(--green-bg); color: var(--green); }
+  .pill-orange { background: var(--orange-bg); color: var(--orange); }
+  .pill-amber { background: var(--amber-bg); color: var(--amber); }
+  .pill-blue { background: var(--blue-bg); color: var(--blue); }
+  .pill-red { background: var(--red-bg); color: var(--red); }
+
+  .pill-live::before {
+    content:'';
+    width:5px; height:5px;
+    border-radius:50%;
+    background: currentColor;
+    animation: blink 1.5s infinite;
+  }
+
+  .card-body { padding: 18px 20px; }
+
+  /* ── PRIORITY TABLE ── */
+  .ptable { width:100%; border-collapse:collapse; }
+
+  .ptable th {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 0 0 10px;
+    text-align: left;
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  .ptable td {
+    padding: 13px 0;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .ptable tr:last-child td { border-bottom: none; }
+  .ptable tbody tr:hover td { background: var(--surface2); }
+
+  .rest-row { display:flex; align-items:center; gap:10px; }
+
+  .food-chip {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink:0;
+    border: 1px solid var(--border);
+  }
+
+  .r-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .r-sub { font-size: 11px; color: var(--text3); margin-top:1px; }
+
+  .pbar-wrap { display:flex; align-items:center; gap:8px; }
+
+  .pbar-bg {
+    flex:1;
+    height: 6px;
+    background: var(--surface3);
+    border-radius: 3px;
+    overflow:hidden;
+  }
+
+  .pbar-fill { height:100%; border-radius:3px; }
+
+  .pscore {
+    font-size: 14px;
+    font-weight: 800;
+    font-family: 'DM Mono', monospace;
+    width: 28px;
+    text-align: right;
+  }
+
+  .expiry-hot { color: var(--red); font-weight: 700; }
+  .expiry-ok  { color: var(--text3); }
+
+  .assign-btn {
+    padding: 4px 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    white-space: nowrap;
+    transition: all 0.13s;
+  }
+
+  /* ── NGO MATCHER ── */
+  .ngo-context {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 14px;
+  }
+
+  .ngo-context strong { color: var(--text); }
+
+  .ngo-list { display:flex; flex-direction:column; gap:8px; }
+
+  .ngo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 13px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    transition: all 0.13s;
+  }
+
+  .ngo-row:hover { background: var(--surface3); border-color: var(--border2); }
+
+  .ngo-row.best {
+    background: var(--green-soft);
+    border-color: #86EFAC;
+  }
+
+  .rank-num {
+    font-size: 16px;
+    font-weight: 800;
+    width: 20px;
+    flex-shrink:0;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .rank-1 { color: var(--green); }
+  .rank-2 { color: var(--amber); }
+  .rank-3 { color: var(--blue); }
+
+  .ngo-details { flex:1; min-width:0; }
+  .ngo-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .ngo-meta { font-size: 11px; color: var(--text3); margin-top:2px; }
+
+  .match-val {
+    font-size: 18px;
+    font-weight: 800;
+    font-family: 'DM Mono', monospace;
+    flex-shrink:0;
+  }
+
+  .match-val.m1 { color: var(--green); }
+  .match-val.m2 { color: var(--amber); }
+  .match-val.m3 { color: var(--blue); }
+
+  /* ── TABS ── */
+  .tabs { display:flex; gap:3px; }
+
+  .tab {
+    padding: 5px 11px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text3);
+    transition: all 0.13s;
+  }
+
+  .tab.active { background: var(--green-bg); color: var(--green); }
+  .tab:hover:not(.active) { background: var(--surface2); color: var(--text2); }
+
+  /* ── 3-COL INSIGHT ROW ── */
+  .insight-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .insight { padding:0; }
+
+  /* Vision AI */
+  .vision-scan {
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .food-thumb {
+    width: 60px; height: 60px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+    border: 1px solid #BBF7D0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:26px;
+    flex-shrink:0;
+  }
+
+  .scan-info { flex:1; }
+  .scan-title { font-size: 13px; font-weight: 700; color: var(--text); }
+  .scan-model { font-size: 10.5px; color: var(--text3); margin:2px 0 6px; }
+
+  .tag-row { display:flex; flex-wrap:wrap; gap:4px; }
+
+  .ftag {
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: var(--surface3);
+    color: var(--text2);
+    font-weight: 600;
+    border: 1px solid var(--border);
+  }
+
+  .vision-count {
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 10px 13px;
+    background: var(--green-soft);
+    border: 1px solid #BBF7D0;
+    border-radius: var(--radius-sm);
+  }
+
+  .vision-count-label { font-size: 12px; color: var(--green); font-weight: 600; }
+  .vision-count-val { font-size: 22px; font-weight: 800; color: var(--green); font-family: 'DM Mono', monospace; }
+
+  /* Spoilage */
+  .spoilage-item { margin-bottom: 14px; }
+  .spoilage-item:last-child { margin-bottom:0; }
+
+  .sp-row { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:5px; }
+  .sp-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .sp-meta { font-size: 10.5px; color: var(--text3); margin-top:1px; }
+  .sp-time { font-size: 13.5px; font-weight: 800; font-family: 'DM Mono', monospace; }
+
+  .sp-bar-bg { height: 7px; background: var(--surface3); border-radius: 4px; overflow:hidden; }
+  .sp-bar-fill { height:100%; border-radius:4px; }
+
+  /* Demand */
+  .demand-list { display:flex; flex-direction:column; gap:11px; }
+
+  .demand-row { display:flex; align-items:center; gap:10px; }
+
+  .demand-ngo { font-size: 13px; font-weight: 600; color: var(--text); width:100px; flex-shrink:0; }
+  .demand-bar-bg { flex:1; height:7px; background: var(--surface3); border-radius:4px; overflow:hidden; }
+  .demand-bar-fill { height:100%; border-radius:4px; }
+  .demand-val { font-size: 13px; font-weight: 800; color: var(--text); width:58px; text-align:right; flex-shrink:0; font-family:'DM Mono',monospace; }
+
+  /* ── BOTTOM ROW ── */
+  .bot-grid {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  /* Route */
+  .route-map-box {
+    background: #F0F9F4;
+    border: 1px solid #BBF7D0;
+    border-radius: var(--radius-sm);
+    height: 170px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+
+  .map-dots {
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle, #16A34A22 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .route-stops { display:flex; flex-direction:column; gap:0; }
+
+  .rstop { display:flex; align-items:center; gap:10px; padding: 8px 0; position:relative; }
+
+  .rstop:not(:last-child)::before {
+    content:'';
+    position:absolute;
+    left: 10px;
+    top: 30px;
+    bottom: -8px;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .rstop-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 10px;
+    font-weight: 800;
+    flex-shrink:0;
+    border: 2px solid var(--border);
+    background: var(--surface2);
+    color: var(--text3);
+    z-index:1;
+    position:relative;
+  }
+
+  .rstop-num.done { background: var(--green); border-color: var(--green); color:#fff; }
+  .rstop-num.going { background: var(--blue-bg); border-color: var(--blue); color: var(--blue); }
+
+  .rstop-name { flex:1; font-size: 13px; font-weight: 600; color: var(--text); }
+  .rstop-sub { font-size: 11px; color: var(--text3); }
+  .rstop-eta { font-size: 12px; font-weight: 700; color: var(--text3); font-family: 'DM Mono', monospace; }
+  .rstop-eta.live { color: var(--blue); }
+
+  /* Activity feed */
+  .activity { display:flex; flex-direction:column; }
+
+  .act-item {
+    display:flex;
+    gap:11px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .act-item:last-child { border-bottom:none; }
+
+  .act-icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 14px;
+    flex-shrink:0;
+    margin-top:1px;
+  }
+
+  .act-body { flex:1; }
+  .act-msg { font-size: 13px; color: var(--text); line-height:1.4; }
+  .act-msg strong { color: var(--green); font-weight: 700; }
+  .act-msg .hot { color: var(--red); font-weight: 700; }
+  .act-when { font-size: 11px; color: var(--text3); margin-top:3px; }
+
+  /* ── IMPACT FOOTER ── */
+  .impact-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    box-shadow: var(--shadow);
+  }
+
+  .impact-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 36px;
+    white-space: nowrap;
+  }
+
+  .impact-stats { display:flex; gap:0; flex:1; }
+
+  .impact-stat {
+    flex:1;
+    padding: 0 24px;
+    border-right: 1px solid var(--border);
+  }
+
+  .impact-stat:first-child { padding-left: 0; }
+  .impact-stat:last-child { border-right: none; }
+
+  .impact-num {
+    font-size: 24px;
+    font-weight: 800;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: -0.5px;
+    line-height:1;
+    margin-bottom: 3px;
+  }
+
+  .impact-desc { font-size: 11px; color: var(--text3); font-weight: 600; }
+
+  .azure-badge {
+    display:flex; align-items:center; gap:6px;
+    background: var(--blue-bg);
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue);
+    margin-left: 24px;
+    white-space: nowrap;
+  }
+
+  /* section label */
+  .sec-row {
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin: 4px 0 14px;
+  }
+
+  .sec-lbl {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text3);
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .sec-line { flex:1; height:1px; background: var(--border); }
+
+  /* weekly mini bars */
+  .week-bars {
+    display:flex; align-items:flex-end; gap:5px; height:52px; margin:12px 0 5px;
+  }
+
+  .wb {
+    flex:1; border-radius:4px 4px 0 0; min-height:5px;
+    background: var(--green-bg);
+    transition: background 0.2s;
+    cursor:pointer;
+    position:relative;
+  }
+
+  .wb:hover { background: var(--green-mid); }
+  .wb.today { background: var(--green); }
+
+  .week-labels {
+    display:flex; gap:5px; justify-content:space-between;
+    font-size: 10px; color: var(--text3); font-weight:600;
+  }
+
+  .week-labels span { flex:1; text-align:center; }
+
+  .kpi-mini {
+    display:flex; gap:16px; margin-top:14px; padding-top:14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .kpi-mini-item { }
+  .kpi-mini-val { font-size:15px; font-weight:800; color:var(--text); font-family:'DM Mono',monospace; }
+  .kpi-mini-lbl { font-size:10px; color:var(--text3); font-weight:600; margin-top:1px; }
+
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+  </style>
+  <link href="https://unpkg.com/leaflet/dist/leaflet.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <!--  SIDEBAR  -->
+  <aside class="sidebar">
+   <div class="logo">
+    <div class="logo-row">
+     <div class="logo-leaf">
+      🌿
+     </div>
+     <div class="logo-wordmark">
+      Food
+      <span>
+       Bridge
+      </span>
+      AI
+     </div>
+    </div>
+    <div class="logo-tagline">
+     Intelligent Redistribution Platform
+    </div>
+    <div class="region-pill">
+     <div class="region-dot">
+     </div>
+     Nagpur Region &middot; Active
+    </div>
+   </div>
+   <nav class="nav">
+    <div class="nav-section">
+     <div class="nav-heading">
+      Overview
+     </div>
+     <div class="nav-item active" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <span class="nav-icon">
+       ⬡
+      </span>
+      Dashboard
+     </div>
+     <div class="nav-item" onclick="scrollToSection('mapSection')">
+      <span class="nav-icon">
+       🗺
+      </span>
+      Live Map
+      <span class="nav-badge">
+       3
+      </span>
+     </div>
+     <div class="nav-item" onclick="scrollToSection('analyticsSection')">
+      <span class="nav-icon">
+       📊
+      </span>
+      Analytics
+     </div>
+    </div>
+    <div class="nav-section">
+     <div class="nav-heading">
+      Operations
+     </div>
+     <div class="nav-item" onclick="scrollToSection('donationsSection')">
+      <span class="nav-icon">
+       🍽
+      </span>
+      Donations
+      <span class="nav-badge">
+       7
+      </span>
+     </div>
+     <div class="nav-item" onclick="scrollToSection('ngoSection')">
+      <span class="nav-icon">
+       🏢
+      </span>
+      NGO Partners
+     </div>
+     <div class="nav-item" onclick="scrollToSection('routeSection')">
+      <span class="nav-icon">
+       🚗
+      </span>
+      Routes
+     </div>
+     <div class="nav-item" onclick="scrollToSection('pickupSection')">
+      <span class="nav-icon">
+       📦
+      </span>
+      Pickups
+     </div>
+    </div>
+    <div class="nav-section">
+     <div class="nav-heading">
+      AI Modules
+     </div>
+     <div class="nav-item" onclick="scrollToSection('donationsSection')">
+      <span class="nav-icon">
+       🧠
+      </span>
+      Priority Engine
+     </div>
+     <div class="nav-item" onclick="scrollToSection('visionSection')">
+      <span class="nav-icon">
+       👁
+      </span>
+      Vision AI
+     </div>
+     <div class="nav-item" onclick="scrollToSection('forecastSection')">
+      <span class="nav-icon">
+       📈
+      </span>
+      Demand Forecast
+     </div>
+     <div class="nav-item" onclick="scrollToSection('fraudSection')">
+      <span class="nav-icon">
+       🛡
+      </span>
+      Fraud Detection
+     </div>
+    </div>
+    <div class="nav-section">
+     <div class="nav-heading">
+      System
+     </div>
+     <div class="nav-item">
+      <span class="nav-icon">
+       👥
+      </span>
+      Users
+     </div>
+     <div class="nav-item">
+      <span class="nav-icon">
+       ⚙
+      </span>
+      Settings
+     </div>
+    </div>
+   </nav>
+   <div class="sidebar-bottom">
+    <div class="user-tile">
+     <div class="avatar">
+      AD
+     </div>
+     <div>
+      <div class="user-name">
+       Admin Control
+      </div>
+      <div class="user-role">
+       Super Admin &middot; Nagpur
+      </div>
+     </div>
+     <span style="font-size:13px;color:var(--text3);margin-left:auto">
+      &ctdot;
+     </span>
+    </div>
+   </div>
+  </aside>
+  <!--  MAIN  -->
+  <main class="main">
+   <!--  TOPBAR  -->
+   <div class="topbar">
+    <div>
+     <div class="page-title">
+      Operations Dashboard
+     </div>
+    </div>
+    <div class="page-date" id="currentDate">
+</div>
+    <div class="topbar-right">
+ <input
+id="globalSearch"
+type="text"
+placeholder="🔍 Search donations, NGOs..."
+onkeyup="
+loadDonations();
+loadNGOs(100);
+"
+class="search-box"
+style="
+padding:12px 16px;
+border:none;
+border-radius:12px;
+width:280px;
+">
+   
+     
+     <button class="btn btn-green" onclick="openDonationModal()">
+      + Log Donation
+     </button>
+    </div>
+   </div>
+   <div class="content">
+    <!--  ALERT  -->
+    <div class="alert">
+     <div class="alert-pulse">
+     </div>
+     <div class="alert-msg" id="alertMessage">
+
+No urgent donations
+
+</div>
+    <div class="alert-time" id="alertTime">
+  Live
+</div>
+     <div style="display:flex;gap:7px;margin-left:10px">
+      <button
+class="btn-sm btn-sm-ghost"
+onclick="dismissAlert()">
+    Dismiss
+</button>
+      <button
+class="btn-sm btn-sm-red"
+onclick="assignUrgentDonation()">
+    Assign Now →
+</button>
+     </div>
+    </div>
+    <!--  STATS  -->
+    <div class="stats-row">
+     <div class="stat s-green">
+      <div class="stat-header">
+       <div class="stat-label">
+        Meals Saved Today
+       </div>
+       <div class="stat-icon-box green">
+        🥗
+       </div>
+      </div>
+      <div class="stat-val" id="mealsSaved">
+       0
+      </div>
+      <div class="stat-sub">
+       <span class="up">
+        &uarr; 18%
+       </span>
+       vs yesterday
+      </div>
+     </div>
+     <div class="stat s-orange">
+      <div class="stat-header">
+       <div class="stat-label">
+        Active Donations
+       </div>
+       <div class="stat-icon-box orange">
+        ⏳
+       </div>
+      </div>
+      <div class="stat-val" id="activeDonations">
+       0
+      </div>
+      <div class="stat-sub">
+       <span class="dn">
+        3 expiring
+       </span>
+       soon
+      </div>
+     </div>
+     <div class="stat s-amber">
+      <div class="stat-header">
+       <div class="stat-label">
+        NGOs Online
+       </div>
+       <div class="stat-icon-box amber">
+        🏢
+       </div>
+      </div>
+      <div class="stat-val" id="ngoCount">
+       0
+      </div>
+      <div class="stat-sub">
+       <span class="up">
+        &uarr; 2 new
+       </span>
+       this week
+      </div>
+     </div>
+     <div class="stat s-blue">
+      <div class="stat-header">
+       <div class="stat-label">
+        CO₂ Prevented (kg)
+       </div>
+       <div class="stat-icon-box blue">
+        🌿
+       </div>
+      </div>
+      <div class="stat-val" id="co2Saved">
+       0
+      </div>
+      <div class="stat-sub">
+       <span class="up">
+        &uarr; 23%
+       </span>
+       this month
+      </div>
+     </div>
+    </div>
+    <!--  MID GRID: Priority Table + NGO Matcher  -->
+    <div class="mid-grid" id="donationsSection">
+     <!--  Priority Table  -->
+     <div class="card">
+      <div class="card-head">
+       <div class="card-title">
+        🎯 AI Priority Queue
+       </div>
+       <div class="tabs">
+        <div class="tab active">
+         Active
+        </div>
+        <div class="tab">
+         Pending
+        </div>
+        <div class="tab">
+         History
+        </div>
+       </div>
+       <span class="pill pill-orange pill-live">
+        LIVE
+       </span>
+      </div>
+      <div style="padding:0 20px">
+       <table class="ptable">
+        <thead>
+         <tr>
+          <th style="width:25%">
+           Restaurant
+          </th>
+          <th>
+           Meals
+          </th>
+          <th>
+           Expires
+          </th>
+          <th>
+           Priority
+          </th>
+          <th>
+           Status
+          </th>
+          <th>
+           Assigned NGO
+          </th>
+         </tr>
+        </thead>
+        <tbody id="donationTableBody">
+        </tbody>
+       </table>
+      </div>
+     </div>
+     <!--  Right col: NGO Matcher + Spoilage  -->
+     <div style="display:flex;flex-direction:column;gap:14px">
+      <!--  NGO Matcher  -->
+      <div class="card" id="ngoSection">
+       <div class="card-head">
+        <div class="card-title">
+         🤝 AI NGO Matcher
+        </div>
+        <span class="pill pill-green pill-live">
+         AI Active
+        </span>
+       </div>
+       <div class="card-body">
+        <div class="ngo-context">
+         Matching for:
+         <strong>
+          Spice Garden
+         </strong>
+         &middot; 180 meals &middot; 1.2 km from Civil Lines
+        </div>
+        <div class="ngo-list" id="ngoList">
+</div>
+
+<div style="display:flex;gap:10px;margin-top:13px;">
+
+<button
+class="btn btn-green"
+id="autoAssignBtn"
+style="flex:1;justify-content:center;">
+ Auto-Assign →
+</button>
+
+<button
+onclick="openNGOModal()"
+style="
+flex:1;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:10px;
+padding:12px;
+font-weight:600;
+cursor:pointer;
+">
++ Add NGO
+</button>
+
+</div>
+       </div>
+      </div>
+      <!--  Spoilage Risk  -->
+      <div class="card">
+       <div class="card-head">
+        <div class="card-title">
+         🌡 Spoilage Risk
+        </div>
+        <span class="pill pill-red">
+         2 At Risk
+        </span>
+       </div>
+       <div class="card-body">
+<div id="spoilageList">
+   
+</div>
+
+    </div>
+</div>
+</div>
+</div>
+
+    <!--  AI INSIGHTS ROW  -->
+    <div class="sec-row">
+     <div class="sec-lbl">
+      AI Module Insights
+     </div>
+     <div class="sec-line">
+     </div>
+    </div>
+    <div class="insight-row" id="analyticsSection">
+     <!--  Vision AI  -->
+     <div class="card insight" id="visionSection">
+      <div class="card-head">
+       <div class="card-title">
+        👁 Vision AI &middot; Latest Scan
+       </div>
+       <span class="pill pill-green pill-live">
+        Live
+       </span>
+      </div>
+      <div class="card-body">
+       <div class="vision-scan">
+        <div class="food-thumb">
+         🍛
+        </div>
+        <div class="scan-info">
+        <div class="scan-title" id="visionRestaurant">
+    No Scan Yet
+</div>
+         <div class="scan-model" id="visionInfo">
+    Waiting for donation...
+</div>
+        <div class="tag-row" id="visionTags">
+</div>
+        </div>
+       </div>
+       <div class="vision-count">
+        <div class="vision-count-label">
+         Estimated servings
+        </div>
+        <div class="vision-count-val" id="visionServings">
+    0
+</div>
+       </div>
+      </div>
+     </div>
+     <!--  Demand Forecast  -->
+     <div class="card insight" id="forecastSection">
+      <div class="card-head">
+       <div class="card-title">
+        📈 Tomorrow's Demand
+       </div>
+       <span class="pill pill-blue">
+        ML Forecast
+       </span>
+      </div>
+      <div class="card-body">
+       <div class="demand-list" id="demandList">
+</div>
+       <div style="margin-top:14px;padding:10px;background:var(--blue-bg);border:1px solid #BFDBFE;border-radius:8px;font-size:12px;color:var(--blue);font-weight:600">
+        Total tomorrow:
+
+        <strong
+        id="forecastTotal"
+        style="font-family:'DM Mono',monospace">
+        0 meals
+        </strong>
+
+        forecasted across
+
+        <span id="forecastNGOs">
+        0
+        </span>
+
+        NGOs
+</div>
+      </div>
+     </div>
+     <!--  Weekly Chart  -->
+     <div class="card insight">
+      <div class="card-head">
+       <div class="card-title">
+        📊 Meals Rescued &middot; Week
+       </div>
+       <div id="weeklyMeals" style="font-size:20px;font-weight:800;color:var(--green);font-family:'DM Mono',monospace">
+        0
+       </div>
+      </div>
+      <div class="card-body">
+       <div class="week-bars">
+        <div class="wb" style="height:55%">
+        </div>
+        <div class="wb" style="height:72%">
+        </div>
+        <div class="wb" style="height:61%">
+        </div>
+        <div class="wb" style="height:88%">
+        </div>
+        <div class="wb" style="height:95%">
+        </div>
+        <div class="wb" style="height:78%">
+        </div>
+        <div class="wb today" style="height:100%">
+        </div>
+       </div>
+       <div class="week-labels">
+        <span>
+         Mon
+        </span>
+        <span>
+         Tue
+        </span>
+        <span>
+         Wed
+        </span>
+        <span>
+         Thu
+        </span>
+        <span>
+         Fri
+        </span>
+        <span>
+         Sat
+        </span>
+        <span>
+         Today
+        </span>
+       </div>
+       <div class="kpi-mini">
+        <div class="kpi-mini-item">
+         <div class="kpi-mini-val">
+          2,629
+         </div>
+         <div class="kpi-mini-lbl">
+          Avg / day
+         </div>
+        </div>
+        <div class="kpi-mini-item">
+         <div class="kpi-mini-val" style="color:var(--green)">
+          3,241
+         </div>
+         <div class="kpi-mini-lbl">
+          Best day
+         </div>
+        </div>
+        <div class="kpi-mini-item">
+         <div class="kpi-mini-val" style="color:var(--green)">
+          67%
+         </div>
+         <div class="kpi-mini-lbl">
+          Waste cut
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <!--  BOTTOM ROW  -->
+    <div class="bot-grid" id="routeSection">
+     <!--  Route  -->
+     <div class="card">
+      <div class="card-head">
+       <div class="card-title">
+        🗺 Active Route &middot; Vehicle RB-01
+       </div>
+       <span class="pill pill-blue pill-live">
+        In Transit
+       </span>
+      </div>
+      <div class="card-body">
+       <div class="route-map-box" id="mapSection">
+        <div
+    id="map"
+    onclick="openMapFullscreen()"
+    style="
+        height:400px;
+        width:100%;
+        border:3px solid red;
+        cursor:pointer;
+    ">
+</div>
+       </div>
+       </div>
+       <div class="route-stops" id="routeStops">
+</div>
+           
+     </div>
+    
+    <!--  Activity Feed  -->
+    <div class="card" id="fraudSection">
+     <div class="card-head">
+      <div class="card-title">
+       ⚡ Live Activity Feed
+      </div>
+      <span class="pill pill-green pill-live">
+       Real-time
+      </span>
+     </div>
+     <div class="card-body" style="padding-top:6px">
+      <div class="activity" id="activityFeed">
+</div>
+      
+     </div>
+    </div>
+   </div>
+   <!--  IMPACT FOOTER  -->
+   <div class="impact-bar">
+    <div class="impact-label">
+     Total Impact
+     <br/>
+     All Time
+    </div>
+    <div class="impact-stats">
+     <div class="impact-stat">
+      <div
+class="impact-num"
+id="foodRescued"
+style="color:var(--green)">
+0
+</div>
+      <div class="impact-desc">
+       Food Rescued
+      </div>
+     </div>
+     <div class="impact-stat">
+      <div
+class="impact-num"
+id="peopleFed"
+style="color:var(--blue)">
+0
+</div>
+      <div class="impact-desc">
+       People Fed
+      </div>
+     </div>
+     <div class="impact-stat">
+      <div
+class="impact-num"
+id="impactCO2"
+style="color:var(--amber)">
+0
+</div>
+      <div class="impact-desc">
+       CO₂ Prevented
+      </div>
+     </div>
+     <div class="impact-stat">
+      <div class="impact-num" style="color:var(--orange)">
+       67%
+      </div>
+      <div class="impact-desc">
+       Waste Reduction
+      </div>
+     </div>
+     <div class="impact-stat">
+      <div
+class="impact-num"
+id="impactNGOCount"
+style="color:var(--green)">
+0
+</div>
+      <div class="impact-desc">
+       NGO Partners
+      </div>
+     </div>
+    </div>
+    
+   </div>
+   <!--  /content  -->
+  </main>
+  <script>
+   function openDonationModal() {
+    document.getElementById("donationModal").style.display = "flex";
+  }
+
+  function closeDonationModal() {
+    document.getElementById("donationModal").style.display = "none";
+  }
+
+  function openNGOModal() {
+    document.getElementById("ngoModal").style.display = "flex";
+}
+
+function closeNGOModal() {
+    document.getElementById("ngoModal").style.display = "none";
+}
+
+  function openMapFullscreen() {
+
+    const mapBox =
+        document.getElementById("map");
+
+    if (!document.fullscreenElement) {
+
+        mapBox.requestFullscreen();
+
+    } else {
+
+        document.exitFullscreen();
+
+    }
+}
+
+  function scrollToSection(sectionId) {
+
+    const section =
+        document.getElementById(sectionId);
+
+    if(section){
+        section.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+}
+
+async function submitDonation() {
+    const donation = {
+      restaurant_name: document.getElementById("restaurantName").value,
+      food_type: document.getElementById("foodType").value,
+      quantity: parseInt(document.getElementById("quantity").value),
+      location: document.getElementById("location").value,
+      expiry_hours: parseInt(document.getElementById("expiryHours").value),
+    };
+
+    await fetch("http://127.0.0.1:8000/donation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(donation),
+    });
+
+    closeDonationModal();
+    loadDonations();
+  }
+
+  async function loadDonations() {
+    console.log("loadDonations called");
+
+    console.log("Loading Donations...");
+    const response = await fetch("http://127.0.0.1:8000/donations");
+    const donationsData = await response.json();
+
+const searchText =
+    document.getElementById("globalSearch")
+    ?.value
+    .toLowerCase() || "";
+
+const donations =
+    donationsData.filter(donation =>
+        donation.restaurant_name.toLowerCase().includes(searchText) ||
+        donation.location.toLowerCase().includes(searchText) ||
+        donation.food_type.toLowerCase().includes(searchText) ||
+        (donation.assigned_ngo || "").toLowerCase().includes(searchText)
+    );
+
+    loadRoutes(donations);
+    loadActivityFeed(donations);
+    loadSpoilageRisk(donations);
+    loadVisionAI(donations);
+
+    if (donations.length > 0) {
+
+    const topDonation =
+        donations.reduce((highest, current) =>
+            current.priority_score > highest.priority_score
+                ? current
+                : highest
+        );
+
+        urgentDonationId =
+    topDonation.id;
+
+    document.getElementById("alertMessage").innerHTML =
+        `<strong>URGENT:</strong>
+        ${topDonation.restaurant_name}
+        (${topDonation.location})
+        — ${topDonation.quantity} meals expiring in
+        ${topDonation.expiry_hours} hours.
+        AI Priority Score:
+        <strong>${topDonation.priority_score}</strong>`;
+
+    document.getElementById("alertTime").innerText =
+        "Live";
+
+}
+
+    let totalMeals = 0;
+
+    donations.forEach((donation) => {
+      totalMeals += donation.quantity;
+    });
+
+    document.getElementById("foodRescued").innerText =
+    totalMeals + " kg";
+
+document.getElementById("peopleFed").innerText =
+    totalMeals;
+
+document.getElementById("impactCO2").innerText =
+    (totalMeals * 0.25).toFixed(1) + " kg";
+
+    document.getElementById("weeklyMeals").innerText =
+    totalMeals;
+
+
+const co2Prevented =
+    Math.round(totalMeals * 0.25);
+
+document.getElementById("co2Saved").innerText =
+    co2Prevented;
+
+    document.getElementById("mealsSaved").innerText = totalMeals;
+    document.getElementById("activeDonations").innerText = donations.length;
+
+    const tableBody = document.getElementById("donationTableBody");
+    tableBody.innerHTML = "";
+
+    donations.forEach((donation) => {
+      tableBody.innerHTML += `
+        <tr>
+          <td>
+            <div class="rest-row">
+              <div class="food-chip">🍛</div>
+              <div>
+                <div class="r-name">${donation.restaurant_name}</div>
+                <div class="r-sub">${donation.location}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <strong>${donation.quantity}</strong>
+          </td>
+          <td>${donation.expiry_hours} hrs</td>
+          <td>
+            <div class="pbar-wrap">
+              <div class="pscore">${donation.priority_score}</div>
+            </div>
+          </td>
+<td>
+
+${
+    donation.status === "Pending"
+    ? '<span class="pill pill-amber">Pending</span>'
+
+    : donation.status === "Assigned"
+    ? '<span class="pill pill-blue">Assigned</span>'
+
+    : donation.status === "Picked Up"
+    ? '<span class="pill pill-orange">Picked Up</span>'
+
+    : '<span class="pill pill-green">Delivered</span>'
+}
+
+</td>
+
+<td>
+    ${donation.assigned_ngo}
+</td>
+
+<td>
+
+${
+    donation.status === "Assigned"
+
+    ? `<button
+        onclick="pickupDonation(${donation.id})"
+        style="
+        padding:8px 12px;
+        border:none;
+        border-radius:8px;
+        background:#f59e0b;
+        color:white;
+        cursor:pointer;
+        ">
+        🚚 Pickup
+       </button>`
+
+    : donation.status === "Picked Up"
+
+    ? `<button
+        onclick="deliverDonation(${donation.id})"
+        style="
+        padding:8px 12px;
+        border:none;
+        border-radius:8px;
+        background:#16a34a;
+        color:white;
+        cursor:pointer;
+        ">
+        ✅ Deliver
+       </button>`
+
+    : ""
+}
+
+</td>
+        </tr>
+      `;
+    });
+  }
+
+  async function loadNGOs(quantity = 0) {
+    console.log("Loading NGOs...");
+    const response = await fetch("http://127.0.0.1:8000/ngos");
+    const ngos = await response.json();
+
+    loadForecast(ngos);
+
+    document.getElementById("ngoCount").innerText =
+    ngos.length;
+
+    document.getElementById("impactNGOCount").innerText =
+    ngos.length;
+
+    ngos.sort((a, b) => {
+      const scoreA =
+        (a.capacity - Math.abs(a.capacity - quantity)) +
+        a.vehicles * 50;
+      const scoreB =
+        (b.capacity - Math.abs(b.capacity - quantity)) +
+        b.vehicles * 50;
+      return scoreB - scoreA;
+    });
+
+    const bestNGO = ngos[0];
+
+    document.getElementById("autoAssignBtn").onclick =
+async function () {
+
+    const response =
+        await fetch(
+            "http://127.0.0.1:8000/donations"
+        );
+
+    const donations =
+        await response.json();
+
+    if(donations.length === 0){
+        alert("No donations available");
+        return;
+    }
+
+    const donationId =
+        donations[0].id;
+
+    const assignResponse =
+        await fetch(
+            `http://127.0.0.1:8000/assign/${donationId}`,
+            {
+                method: "PUT"
+            }
+        );
+
+    const result =
+        await assignResponse.json();
+
+  alert(
+    "Assigned to " +
+    result.ngo
+);
+    loadDonations();
+};
+
+    const ngoList = document.getElementById("ngoList");
+    ngoList.innerHTML = "";
+    const searchText =
+    document.getElementById("globalSearch")
+    ?.value
+    .toLowerCase() || "";
+
+const filteredNGOs =
+    ngos.filter(ngo =>
+        ngo.name.toLowerCase().includes(searchText) ||
+        ngo.location.toLowerCase().includes(searchText)
+    );
+
+filteredNGOs.forEach((ngo, index) => {
+    ngoList.innerHTML += `
+        <div class="ngo-row">
+            <div class="rank-num">#${index + 1}</div>
+            <div class="ngo-details">
+                <div class="ngo-name">${ngo.name}</div>
+                <div class="ngo-meta">
+                    ${ngo.location} · Capacity ${ngo.capacity}
+                </div>
+            </div>
+            <div class="match-val">${ngo.vehicles}</div>
+        </div>
+    `;
+});
+
+}
+
+function loadRoutes(donations) {
+
+    const routeStops =
+        document.getElementById("routeStops");
+
+    routeStops.innerHTML = "";
+
+    donations.forEach((donation) => {
+
+        routeStops.innerHTML += `
+        <div class="rstop">
+
+            <div class="rstop-num">
+                🍽
+            </div>
+
+            <div>
+                <div class="rstop-name">
+                    ${donation.restaurant_name}
+                </div>
+
+                <div class="rstop-sub">
+                    ${donation.location}
+                </div>
+            </div>
+
+            <div class="rstop-eta">
+                ${donation.quantity} meals
+            </div>
+
+        </div>
+        `;
+    });
+}
+
+function loadActivityFeed(donations) {
+
+    const activityFeed =
+        document.getElementById("activityFeed");
+
+    activityFeed.innerHTML = "";
+
+    donations.forEach((donation) => {
+
+        activityFeed.innerHTML += `
+        <div class="act-item">
+
+            <div class="act-icon" style="background:var(--green-bg)">
+                🍽
+            </div>
+
+            <div class="act-body">
+
+                <div class="act-msg">
+                    Donation received from
+                    <strong>${donation.restaurant_name}</strong>
+                </div>
+
+                <div class="act-when">
+                    ${donation.quantity} meals ·
+                    ${donation.location}
+                </div>
+
+            </div>
+
+        </div>
+        `;
+    });
+}
+
+async function pickupDonation(donationId) {
+
+    const response =
+        await fetch(
+            `http://127.0.0.1:8000/pickup/${donationId}`,
+            {
+                method: "PUT"
+            }
+        );
+
+    const result =
+        await response.json();
+
+    alert(result.message);
+
+    loadDonations();
+}
+
+async function deliverDonation(donationId) {
+
+    const response =
+        await fetch(
+            `http://127.0.0.1:8000/deliver/${donationId}`,
+            {
+                method: "PUT"
+            }
+        );
+
+    const result =
+        await response.json();
+
+    alert(result.message);
+
+    loadDonations();
+}
+
+async function submitNGO() {
+
+    const ngo = {
+        name: document.getElementById("ngoName").value,
+        location: document.getElementById("ngoLocation").value,
+        capacity: parseInt(document.getElementById("ngoCapacity").value),
+        vehicles: parseInt(document.getElementById("ngoVehicles").value)
+    };
+
+    await fetch("http://127.0.0.1:8000/ngo", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(ngo)
+    });
+
+    closeNGOModal();
+
+    loadNGOs(100);
+}
+
+let urgentDonationId = null;
+
+function dismissAlert() {
+
+    document.querySelector(".alert").style.display =
+        "none";
+}
+
+async function assignUrgentDonation() {
+
+    if (!urgentDonationId) {
+        alert("No urgent donation found");
+        return;
+    }
+
+    const response =
+        await fetch(
+            `http://127.0.0.1:8000/assign/${urgentDonationId}`,
+            {
+                method: "PUT"
+            }
+        );
+
+    const result =
+        await response.json();
+
+    alert(
+        "Assigned to " +
+        result.ngo
+    );
+
+    loadDonations();
+}
+
+function loadSpoilageRisk(donations) {
+
+    const spoilageList =
+        document.getElementById("spoilageList");
+
+    spoilageList.innerHTML = "";
+
+    const sortedDonations =
+        [...donations].sort(
+            (a, b) =>
+                a.expiry_hours - b.expiry_hours
+        );
+
+    sortedDonations
+        .slice(0, 2)
+        .forEach(donation => {
+
+            let color = "#16a34a";
+            let risk = "Low";
+
+            if (donation.expiry_hours <= 2) {
+                color = "#dc2626";
+                risk = "High";
+            }
+            else if (donation.expiry_hours <= 5) {
+                color = "#f59e0b";
+                risk = "Medium";
+            }
+
+            spoilageList.innerHTML += `
+            <div style="
+                padding:6px;
+                margin-bottom:6px;
+                border-left:5px solid ${color};
+                background:#f8fafc;
+                border-radius:8px;
+            ">
+
+                <strong>
+                    ${donation.restaurant_name}
+                </strong>
+
+                <br>
+
+                ${donation.quantity} meals
+
+                <br>
+
+                Expires in
+                ${donation.expiry_hours} hrs
+
+                <br>
+
+                <span style="
+                    color:${color};
+                    font-weight:bold;
+                ">
+                    ${risk} Risk
+                </span>
+
+            </div>
+            `;
+        });
+}
+
+function loadVisionAI(donations) {
+
+    if (donations.length === 0) return;
+
+    const latest =
+        donations[donations.length - 1];
+
+    document.getElementById("visionRestaurant").innerText =
+        latest.restaurant_name;
+
+    document.getElementById("visionInfo").innerText =
+        `AI scanned ${latest.food_type}`;
+
+    document.getElementById("visionServings").innerText =
+        latest.quantity;
+
+    document.getElementById("visionTags").innerHTML =
+        `
+        <span class="ftag">${latest.food_type}</span>
+        <span class="ftag">${latest.quantity} Meals</span>
+        <span class="ftag">${latest.location}</span>
+        `;
+}        
+
+async function loadForecast() {
+
+    const response =
+        await fetch(
+            "http://127.0.0.1:8001/forecast"
+        );
+
+    const data =
+        await response.json();
+
+    const demandList =
+        document.getElementById("demandList");
+
+    if (!demandList) return;
+
+    demandList.innerHTML = "";
+
+    data.forecasts.forEach((item) => {
+
+        demandList.innerHTML += `
+        <div class="demand-row">
+
+            <div class="demand-ngo">
+                ${item.ngo}
+            </div>
+
+            <div class="demand-bar-bg">
+                <div
+                class="demand-bar-fill"
+                style="
+                    width:${Math.min(item.forecast,100)}%;
+                    background:var(--blue);
+                ">
+                </div>
+            </div>
+
+            <div class="demand-val">
+                ${item.forecast}
+            </div>
+
+        </div>
+        `;
+    });
+
+    document.getElementById("forecastTotal")
+        .innerText =
+        data.total + " meals";
+
+    document.getElementById("forecastNGOs")
+        .innerText =
+        data.forecasts.length;
+}
+function loadCurrentDate() {
+
+    const today = new Date();
+
+    document.getElementById("currentDate")
+        .innerText =
+        today.toLocaleDateString(
+            "en-GB",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
+}
+
+function loadCurrentDate() {
+
+    const today = new Date();
+
+    document.getElementById("currentDate")
+        .innerText =
+        today.toLocaleDateString(
+            "en-GB",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
+}
+
+loadCurrentDate();
+loadDonations();
+loadNGOs(100);
+loadForecast();
+  </script>
+
+  <div id="donationModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:white;
+padding:30px;
+border-radius:18px;
+width:600px;
+max-width:90%;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+">
+
+<h2 style="
+margin-bottom:20px;
+color:#16a34a;
+font-size:28px;
+">
+🍽 Log Food Donation
+</h2>
+<label>Restaurant Name</label>
+<input
+id="restaurantName"
+placeholder="e.g. Hotel Centre Point"
+style="width:100%;padding:12px;margin:8px 0 15px 0;border:1px solid #ddd;border-radius:8px;">
+
+<label>Food Type</label>
+
+<select
+id="foodType"
+style="
+width:100%;
+padding:12px;
+margin:8px 0 15px 0;
+border:1px solid #ddd;
+border-radius:8px;
+">
+
+<option value="">Select Food Type</option>
+<option value="Veg">🥬 Veg</option>
+<option value="Non-Veg">🍗 Non-Veg</option>
+
+</select>
+
+<label>Dish Name</label>
+
+<input
+id="foodType"
+placeholder="e.g. Paneer Butter Masala"
+style="
+width:100%;
+padding:12px;
+margin:8px 0 15px 0;
+border:1px solid #ddd;
+border-radius:8px;
+">
+
+<label>Quantity (Meals)</label>
+<input
+id="quantity"
+type="number"
+placeholder="e.g. 150"
+style="width:100%;padding:12px;margin:8px 0 15px 0;border:1px solid #ddd;border-radius:8px;">
+
+<label>Location</label>
+<input
+id="location"
+placeholder="e.g. Civil Lines"
+style="width:100%;padding:12px;margin:8px 0 15px 0;border:1px solid #ddd;border-radius:8px;">
+
+<label>Expiry Hours</label>
+<input
+id="expiryHours"
+type="number"
+placeholder="e.g. 4"
+style="width:100%;padding:12px;margin:8px 0 15px 0;border:1px solid #ddd;border-radius:8px;">
+
+<div style="
+display:flex;
+gap:12px;
+margin-top:20px;
+">
+
+<button
+onclick="submitDonation()"
+style="
+flex:1;
+padding:12px;
+background:#16a34a;
+color:white;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+">
+🚀 Submit Donation
+</button>
+
+<button
+onclick="closeDonationModal()"
+style="
+flex:1;
+padding:12px;
+background:#ef4444;
+color:white;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+">
+✖ Cancel
+</button>
+
+</div>
+
+</div>
+</div>
+
+<div id="ngoModal" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+<div style="
+background:white;
+padding:30px;
+border-radius:18px;
+width:600px;
+max-width:90%;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+">
+
+<h2 style="
+margin-bottom:20px;
+color:#2563eb;
+font-size:28px;
+">
+🏢 Add NGO
+</h2>
+
+<label>NGO Name</label>
+<input
+id="ngoName"
+placeholder="e.g. City Hunger Mission"
+style="width:100%;padding:12px;margin:8px 0 15px 0;border:1px solid #ddd;border-radius:8px;">
+
+<label>Location</label>
+<input
+id="ngoLocation"
+placeholder="e.g. Civil Lines"
+style="width:100%;padding:12px;margin:8px 0 15px 0;border:1px solid #ddd;border-radius:8px;">
+
+<label>Capacity (Meals)</label>
+<input
+id="ngoCapacity"
+type="number"
+placeholder="e.g. 250"
+style="width:100%;padding:12px;margin:8px 0 15px 0;border:1px solid #ddd;border-radius:8px;">
+
+<label>Vehicles</label>
+<input
+id="ngoVehicles"
+type="number"
+placeholder="e.g. 3"
+style="width:100%;padding:12px;margin:8px 0 15px 0;border:1px solid #ddd;border-radius:8px;">
+
+<div style="
+display:flex;
+gap:12px;
+margin-top:20px;
+">
+
+<button
+onclick="submitNGO()"
+style="
+flex:1;
+padding:12px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+">
+🏢 Add NGO
+</button>
+
+<button
+onclick="closeNGOModal()"
+style="
+flex:1;
+padding:12px;
+background:#ef4444;
+color:white;
+border:none;
+border-radius:10px;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+">
+✖ Cancel
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+
+
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+
+if (navigator.geolocation) {
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+
+            const map = L.map("map").setView(
+                [userLat, userLng],
+                15
+            );
+
+            L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    attribution: "&copy; OpenStreetMap"
+                }
+            ).addTo(map);
+
+            const ngoLocations = {
+    "Civil Lines": [21.1458, 79.0882],
+    "Sitabuldi": [21.1465, 79.0910],
+    "Dharampeth": [21.1320, 79.0700]
+};
+
+            L.marker([userLat, userLng])
+            .addTo(map)
+            .bindPopup("📍 Your Location")
+            .openPopup();
+            async function loadNGOMarkers() {
+
+    const response =
+        await fetch("http://127.0.0.1:8000/ngos");
+
+    const ngos =
+        await response.json();
+
+    ngos.forEach((ngo) => {
+
+        const coords =
+            ngoLocations[ngo.location];
+
+        if(coords){
+
+            L.marker(coords)
+            .addTo(map)
+            .bindPopup(
+                "🏢 " + ngo.name +
+                "<br>📍 " + ngo.location +
+                "<br>🚚 Vehicles: " + ngo.vehicles +
+                "<br>🍽 Capacity: " + ngo.capacity
+            );
+        }
+    });
+}
+loadNGOMarkers();
+
+            L.marker([
+    userLat + 0.01,
+    userLng + 0.01
+])
+.addTo(map)
+.bindPopup("🏢 City Hunger Mission");
+
+L.marker([
+    userLat - 0.01,
+    userLng + 0.01
+])
+.addTo(map)
+.bindPopup("🏢 Roti Bank Nagpur");
+
+L.marker([
+    userLat + 0.01,
+    userLng - 0.01
+])
+.addTo(map)
+.bindPopup("🏢 Helping Hands NGO");
+
+L.marker([
+    userLat - 0.01,
+    userLng - 0.01
+])
+.addTo(map)
+.bindPopup("🏢 Seva Foundation");
+
+L.polyline(
+[
+    [userLat, userLng],
+    [userLat + 0.01, userLng + 0.01]
+],
+{
+    color: "green"
+}
+).addTo(map);
+
+L.polyline(
+[
+    [userLat, userLng],
+    [userLat - 0.01, userLng + 0.01]
+],
+{
+    color: "blue"
+}
+).addTo(map);
+
+L.polyline(
+[
+    [userLat, userLng],
+    [userLat + 0.01, userLng - 0.01]
+],
+{
+    color: "orange"
+}
+).addTo(map);
+
+        },
+
+        function(error) {
+
+            alert(
+                "Location access denied. Please allow location permission."
+            );
+
+        }
+
+    );
+
+}
+
+</script>
+ </body>
+</html>
