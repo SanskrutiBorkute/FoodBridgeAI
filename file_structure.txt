@@ -1,0 +1,107 @@
+FoodBridgeAI
+│
+├── .vscode
+│   └── settings.json
+│
+├── backend
+│   ├── __pycache__
+│   ├── ai_engine.py
+│   ├── app.py
+│   ├── database.py
+│   ├── delete_ngo.py
+│   ├── foodbridge.db
+│   ├── forecast_model.pkl
+│   ├── models.py
+│   ├── priority_model.pkl
+│   ├── requirements.txt
+│   ├── schemas.py
+│   ├── train_forecast_model.py
+│   └── train_priority_model.py
+│
+├── dataset
+│
+├── docs
+│
+├── frontend
+│   └── index.html
+│
+├── models
+│
+├── venv
+│
+├── .gitignore
+├── netlify.toml
+└── README.md
+
+
+Project Folder Description
+==========================
+
+.vscode/
+Contains Visual Studio Code workspace settings.
+
+backend/
+Contains the FastAPI backend source code, AI models, SQLite database, and machine learning scripts.
+
+ai_engine.py
+Implements AI logic for food demand forecasting and NGO priority prediction.
+
+app.py
+Main FastAPI application containing all API endpoints.
+
+database.py
+Handles SQLite database connection and database operations.
+
+delete_ngo.py
+Utility script used to remove NGO records from the database.
+
+foodbridge.db
+SQLite database storing food donations and NGO information.
+
+forecast_model.pkl
+Trained Machine Learning model used for food demand forecasting.
+
+models.py
+Defines database models.
+
+priority_model.pkl
+Machine Learning model used to calculate NGO priority scores.
+
+requirements.txt
+Lists all Python packages required to run the backend.
+
+schemas.py
+Defines request and response schemas for FastAPI.
+
+train_forecast_model.py
+Script used to train the forecasting model.
+
+train_priority_model.py
+Script used to train the NGO priority model.
+
+dataset/
+Contains datasets used for machine learning model training.
+
+docs/
+Contains project documentation, reports, screenshots, and supporting files.
+
+frontend/
+Contains the complete frontend of the application.
+
+index.html
+Main user interface of FoodBridgeAI.
+
+models/
+Stores additional project-related model files if required.
+
+venv/
+Python virtual environment containing installed dependencies.
+
+.gitignore
+Specifies files and folders ignored by Git.
+
+netlify.toml
+Netlify deployment configuration file.
+
+README.md
+Project documentation including setup instructions, implementation details, and project overview.
