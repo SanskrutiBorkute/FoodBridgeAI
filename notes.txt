@@ -1,0 +1,404 @@
+==========================================================
+FoodBridgeAI - Project Guide
+AI-Powered Food Waste Redistribution System
+==========================================================
+
+Author:
+Sanskruti Borkute
+
+University:
+RTM Nagpur University
+
+----------------------------------------------------------
+Project Overview
+----------------------------------------------------------
+
+FoodBridgeAI is an AI-powered web application that helps reduce food wastage by connecting food donors with NGOs.
+
+The platform allows donors to register surplus food, NGOs to register themselves, and uses Machine Learning models to predict food demand and prioritize NGOs for efficient food distribution.
+
+Frontend is deployed on Netlify.
+Backend is deployed on Render.
+
+----------------------------------------------------------
+Technologies Used
+----------------------------------------------------------
+
+Programming Languages
+- Python
+- HTML
+- CSS
+- JavaScript
+
+Frameworks
+- FastAPI
+
+Machine Learning
+- Scikit-Learn
+
+Database
+- SQLite
+
+Deployment
+- Netlify
+- Render
+
+Development Tools
+- VS Code
+- GitHub
+- Postman
+- Swagger UI
+
+----------------------------------------------------------
+Software Requirements
+----------------------------------------------------------
+
+Before running the project locally, install:
+
+- Python 3.10 or above
+- Git
+- VS Code
+- Modern Web Browser (Chrome/Edge)
+- Internet Connection
+
+----------------------------------------------------------
+Project Structure
+----------------------------------------------------------
+
+backend/
+Contains FastAPI backend, AI models, database and APIs.
+
+frontend/
+Contains the website (index.html).
+
+dataset/
+Stores datasets used for training.
+
+docs/
+Contains documentation.
+
+models/
+Stores additional model files.
+
+----------------------------------------------------------
+How to Download the Project
+----------------------------------------------------------
+
+Method 1
+
+Download ZIP from GitHub.
+
+OR
+
+Method 2
+
+Clone using Git.
+
+git clone <repository-url>
+
+----------------------------------------------------------
+How to Run the Project Locally
+----------------------------------------------------------
+
+Step 1
+
+Open the project in VS Code.
+
+----------------------------------------------------------
+
+Step 2
+
+Open Terminal.
+
+----------------------------------------------------------
+
+Step 3
+
+Create Virtual Environment (Optional)
+
+Windows
+
+python -m venv venv
+
+----------------------------------------------------------
+
+Step 4
+
+Activate Virtual Environment
+
+Windows
+
+venv\Scripts\activate
+
+----------------------------------------------------------
+
+Step 5
+
+Install Dependencies
+
+cd backend
+
+pip install -r requirements.txt
+
+----------------------------------------------------------
+
+Step 6
+
+Run Backend
+
+uvicorn app:app --reload
+
+OR
+
+python app.py
+
+Backend runs on
+
+http://127.0.0.1:8000
+
+----------------------------------------------------------
+
+Step 7
+
+Open Swagger API
+
+http://127.0.0.1:8000/docs
+
+All backend APIs can be tested from this page.
+
+----------------------------------------------------------
+
+Step 8
+
+Run Frontend
+
+Open
+
+frontend/index.html
+
+using Live Server
+
+OR
+
+Open directly in browser.
+
+----------------------------------------------------------
+How the Project Works
+----------------------------------------------------------
+
+1. Donor opens the website.
+
+2. Donor fills donation details.
+
+3. Frontend sends data to FastAPI backend.
+
+4. Backend validates the data.
+
+5. Data is stored inside SQLite database.
+
+6. NGO information is stored.
+
+7. AI Priority Model calculates NGO priority.
+
+8. Forecast Model predicts food demand.
+
+9. Dashboard displays all information.
+
+----------------------------------------------------------
+Database
+----------------------------------------------------------
+
+Database Used
+
+SQLite
+
+Database File
+
+backend/foodbridge.db
+
+Contains
+
+- Food Donations
+- NGO Details
+- AI Prediction Data
+
+----------------------------------------------------------
+Machine Learning Models
+----------------------------------------------------------
+
+forecast_model.pkl
+
+Predicts future food demand.
+
+priority_model.pkl
+
+Calculates NGO priority based on donation details.
+
+----------------------------------------------------------
+API Endpoints
+----------------------------------------------------------
+
+Example APIs
+
+GET /
+
+Returns API status.
+
+POST
+
+Add Donation
+
+POST
+
+Register NGO
+
+GET
+
+Donation List
+
+GET
+
+NGO List
+
+GET
+
+Forecast
+
+GET
+
+Priority Prediction
+
+(Note: API names may vary depending on implementation.)
+
+----------------------------------------------------------
+How to Deploy Backend on Render
+----------------------------------------------------------
+
+1. Push project to GitHub.
+
+2. Login to Render.
+
+3. Create New Web Service.
+
+4. Connect GitHub Repository.
+
+5. Select backend folder.
+
+6. Install dependencies automatically.
+
+7. Deploy.
+
+8. Copy Backend URL.
+
+----------------------------------------------------------
+How to Deploy Frontend on Netlify
+----------------------------------------------------------
+
+1. Push project to GitHub.
+
+2. Login to Netlify.
+
+3. Import Project.
+
+4. Connect GitHub.
+
+5. Select Repository.
+
+6. Build settings
+
+Base Directory:
+Leave Empty
+
+Publish Directory:
+Leave Empty
+
+7. Deploy.
+
+8. Copy Netlify URL.
+
+----------------------------------------------------------
+How to Update the Website
+----------------------------------------------------------
+
+Whenever changes are made:
+
+git add .
+
+git commit -m "Update Project"
+
+git push origin main
+
+Netlify automatically redeploys the frontend.
+
+Render automatically redeploys the backend.
+
+----------------------------------------------------------
+Troubleshooting
+----------------------------------------------------------
+
+Problem:
+Backend not starting.
+
+Solution:
+Install all dependencies using
+
+pip install -r requirements.txt
+
+----------------------------------------------------------
+
+Problem:
+API connection failed.
+
+Solution:
+Check if backend is running.
+
+----------------------------------------------------------
+
+Problem:
+Changes not visible.
+
+Solution:
+Refresh browser.
+
+Trigger a new deployment.
+
+----------------------------------------------------------
+
+Problem:
+Module not found.
+
+Solution:
+
+Install missing package using pip.
+
+----------------------------------------------------------
+Future Improvements
+----------------------------------------------------------
+
+- User Login
+- Authentication
+- Role Based Access
+- Google Maps
+- GPS Tracking
+- SMS Alerts
+- Email Notifications
+- Mobile Application
+- Multi-language Support
+- Cloud Database
+- Real-time Notifications
+
+----------------------------------------------------------
+Project Deployment
+----------------------------------------------------------
+
+Frontend
+
+(Netlify URL)
+
+Backend
+
+(Render URL)
+
+----------------------------------------------------------
+End of Document
+----------------------------------------------------------
